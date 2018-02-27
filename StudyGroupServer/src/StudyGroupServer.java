@@ -40,7 +40,6 @@ class StudyGroupServer
             System.out.println("Received packet data: " + packetData);
             
     		JsonParser parser = new JsonParser();
-    		//JsonReader.setLenient(true);
     		JsonReader reader = new JsonReader(new StringReader(packetData));
     		reader.setLenient(true);
     		JsonObject rootObj = parser.parse(reader).getAsJsonObject();
