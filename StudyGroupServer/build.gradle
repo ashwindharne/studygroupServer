@@ -3,3 +3,6 @@ apply plugin: 'war'
 war {
     baseName = 'editor'
 }
+dependencies {
+    compile files('lib/apns-0.1.5-jar-with-dependencies.jar')
+}

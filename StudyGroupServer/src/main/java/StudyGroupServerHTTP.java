@@ -1,3 +1,9 @@
+package main.java;
+
+
+import com.notnoop.apns.APNS;
+import com.notnoop.apns.ApnsService;
+
 import java.io.IOException;
 import java.sql.* ;
 import java.lang.String;
@@ -36,7 +42,6 @@ public class StudyGroupServer extends HttpServlet {
 
 	public void init() throws ServletException
 	{
-		/*  write any servlet initialization code here or remove this function */
 	}
 
 	public void destroy()
@@ -80,10 +85,20 @@ public class StudyGroupServer extends HttpServlet {
 				System.out.println("Users in range are: " + usersInRangeStr);
 				
 				responseJsonObj.addProperty("usersInRange", usersInRangeStr);
-				
+				if (!usersInRange.isEmpty())
 				response.setContentType("text/html");
 				PrintWriter out = response.getWriter();
-				
+				if (!usersInRange.isEmpty()){
+					String cert_path = ""; // TODO: DROP CERT_PATH HERE
+					String password = ""; // TODO: DROP PASSWORD HERE
+					ApnsService service = APNS.newService().withCert(cert_path, password).withSandboxDestination().build();
+
+					String payload = APNS.newPayload()
+							.alertBody("Someone is in range!")
+							.badge(1).sound("default").build();
+					String deviceToken = ""; //TODO: DROP HARD-CODED DEVICE TOKEN HERE
+					service.push(deviceToken, payload);
+				}
 				String responseJson = gson.toJson(responseJsonObj);
 				out.println(responseJson);
 			// If update location package invalid, simply ignore the packet and do not respond.
