@@ -12,5 +12,5 @@ war {
 
 dependencies {
 	compile 'com.google.code.gson:gson:2.2.4',
-    compile files('lib/apns-0.1.5-jar-with-dependencies.jar')
+			files('lib/apns-0.1.5-jar-with-dependencies.jar')
 }
