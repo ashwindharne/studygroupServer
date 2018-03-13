@@ -5,6 +5,7 @@ public class User {
     private double latitude;
     private double longitude;
     private String id;
+	private String passwordHash;
 
     public User(String auth_id){
         id=auth_id;
@@ -35,6 +36,22 @@ public class User {
     public void setLongitude(double new_long){
         longitude=new_long;
     }
+	
+	public void setPassword(String passwordStr) {
+		MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+		messageDigest.update(passwordStr.getBytes());
+		this.passwordHash = new String(messageDigest.digest());
+	}
+	
+	public boolean checkPassword(String passwordStr) {
+		MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+		messageDigest.update(passwordStr.getBytes());
+		return this.passwordHash.equals(new String(messageDigest.digest()));
+	}
+	
+	private void getPassword() {
+		return this.passwordHash;
+	}
     
     public double getDistance(User other){//gets the distance between this user and another user, using lat&long
         double R = 6371;

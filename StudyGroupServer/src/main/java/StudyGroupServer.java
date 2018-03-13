@@ -75,6 +75,7 @@ class StudyGroupServer
     			// If update location package invalid, simply ignore the packet and do not respond.
     			} else {
     				System.out.println("Invalid location update packet was ignored: " + packetData);
+    				continue;
     			}
     		}
     		
