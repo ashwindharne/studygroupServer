@@ -1,5 +1,15 @@
+//apply plugin: 'jetty'
 apply plugin: 'war'
+apply plugin: 'java'
+
+repositories{
+    mavenCentral()
+}
 
 war {
-    baseName = 'editor'
+    baseName = 'StudyGroupServer'
+}
+
+dependencies {
+	compile 'com.google.code.gson:gson:2.2.4'
 }

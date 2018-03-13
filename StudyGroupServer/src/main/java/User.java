@@ -1,24 +1,37 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.security.*;
 
 public class User {
     private double latitude;
     private double longitude;
     private String id;
+	private String username;
 	private String passwordHash;
 
     public User(String auth_id){
         id=auth_id;
     }
     
-    public User(String auth_id, double lat, double lon){
-        id=auth_id;
-        latitude=lat;
-        longitude=lon;
+	
+	public User(String auth_id, String username){
+        this.id=auth_id;
+		this.username = username;
+    }
+	
+    public User(String auth_id, String username, double lat, double lon){
+        this.id=auth_id;
+		this.username = username;
+        this.latitude=lat;
+        this.longitude=lon;
     }//constructor, if necessary give it an ID and initial lat/lon.
     
     public String getId(){//getters and setters
         return id;
+    }
+	
+	public String getUsername(){//getters and setters
+        return username;
     }
     
     public double getLatitude(){
@@ -38,18 +51,26 @@ public class User {
     }
 	
 	public void setPassword(String passwordStr) {
-		MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-		messageDigest.update(passwordStr.getBytes());
-		this.passwordHash = new String(messageDigest.digest());
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+			messageDigest.update(passwordStr.getBytes());
+			this.passwordHash = new String(messageDigest.digest());
+		} catch (Exception e) {
+			return;
+		}
 	}
 	
 	public boolean checkPassword(String passwordStr) {
-		MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-		messageDigest.update(passwordStr.getBytes());
-		return this.passwordHash.equals(new String(messageDigest.digest()));
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+			messageDigest.update(passwordStr.getBytes());
+			return this.passwordHash.equals(new String(messageDigest.digest()));
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
-	private void getPassword() {
+	private String getPassword() {
 		return this.passwordHash;
 	}
     

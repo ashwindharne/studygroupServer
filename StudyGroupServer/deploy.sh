@@ -4,5 +4,5 @@
 gradle assemble
 
 # deploy the war file to tomcat
-rm -f $CATALINA_BASE/webapps/editor.war
-cp build/libs/editor.war $CATALINA_BASE/webapps
+rm -f $CATALINA_BASE/webapps/StudyGroupServer.war
+cp build/libs/StudyGroupServer.war $CATALINA_BASE/webapps
