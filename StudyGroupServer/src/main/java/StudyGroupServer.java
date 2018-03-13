@@ -91,8 +91,8 @@ public class StudyGroupServer extends HttpServlet {
 				System.out.println("Users in range are: " + usersInRangeStr);
 				
 				if (!usersInRange.isEmpty()){
-					String cert_path = "qwerty11"; // TODO: DROP CERT_PATH HERE
-					String password = "lib/Certificates.p12"; // TODO: DROP PASSWORD HERE
+					String cert_path = "lib/Certificates.p12"; // TODO: DROP CERT_PATH HERE
+					String password = "qwerty11"; // TODO: DROP PASSWORD HERE
 					ApnsService service = APNS.newService().withCert(cert_path, password).withSandboxDestination().build();
 
 					String payload = APNS.newPayload()
