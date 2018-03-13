@@ -1,5 +1,3 @@
-package main.java;
-
 import java.io.IOException;
 import java.sql.* ;
 import java.lang.String;
@@ -93,14 +91,14 @@ public class StudyGroupServer extends HttpServlet {
 				System.out.println("Users in range are: " + usersInRangeStr);
 				
 				if (!usersInRange.isEmpty()){
-					String cert_path = ""; // TODO: DROP CERT_PATH HERE
-					String password = ""; // TODO: DROP PASSWORD HERE
+					String cert_path = "qwerty11"; // TODO: DROP CERT_PATH HERE
+					String password = "lib/Certificates.p12"; // TODO: DROP PASSWORD HERE
 					ApnsService service = APNS.newService().withCert(cert_path, password).withSandboxDestination().build();
 
 					String payload = APNS.newPayload()
 							.alertBody("Someone is in range!")
 							.badge(1).sound("default").build();
-					String deviceToken = ""; //TODO: DROP HARD-CODED DEVICE TOKEN HERE
+					String deviceToken = "d13382f02dda1063d7f58b413c9874148981917bb79c94f5d3a9a0590bacfff6"; //TODO: DROP HARD-CODED DEVICE TOKEN HERE
 					service.push(deviceToken, payload);
 				}
 				
