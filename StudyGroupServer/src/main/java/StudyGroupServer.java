@@ -10,6 +10,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
@@ -91,7 +92,8 @@ public class StudyGroupServer extends HttpServlet {
 				System.out.println("Users in range are: " + usersInRangeStr);
 				
 				if (!usersInRange.isEmpty()){
-					String cert_path = "lib/Certificates.p12"; // TODO: DROP CERT_PATH HERE
+					ServletContext context = getServletContext();
+					String cert_path = context.getRealPath("/Certificates.p12");
 					String password = "qwerty11"; // TODO: DROP PASSWORD HERE
 					ApnsService service = APNS.newService().withCert(cert_path, password).withSandboxDestination().build();
 

@@ -8,6 +8,9 @@ repositories{
 
 war {
     baseName = 'StudyGroupServer'
+	from('lib') {
+        include 'Certificates.p12'
+    }
 }
 
 dependencies {
