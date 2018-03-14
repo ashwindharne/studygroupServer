@@ -111,7 +111,7 @@ public class StudyGroupServer extends HttpServlet {
 				responseJsonObj.addProperty("usersInRange", "");
 			}
 		}
-		response.setContentType("text/html");
+		response.setContentType("text/plain");
 		PrintWriter out = response.getWriter();
 		
 		String responseJson = gson.toJson(responseJsonObj);
@@ -171,7 +171,7 @@ public class StudyGroupServer extends HttpServlet {
 			responseJsonObj.addProperty("username", username);
 			responseJsonObj.addProperty("remoteAddr", request.getRemoteAddr());
 		}
-		response.setContentType("text/html");
+		response.setContentType("text/plain");
 		PrintWriter out = response.getWriter();
 		
 		String responseJson = gson.toJson(responseJsonObj);
@@ -183,7 +183,7 @@ public class StudyGroupServer extends HttpServlet {
 	}
 	
 	public void writeError(HttpServletResponse response) throws IOException{
-		response.setContentType("text/html");
+		response.setContentType("text/plain");
 		PrintWriter out = response.getWriter();
 		
 		out.println("Internal Error occurred.");
