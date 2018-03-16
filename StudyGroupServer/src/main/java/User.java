@@ -5,6 +5,7 @@ import java.security.*;
 public class User {
     private double latitude;
     private double longitude;
+	private String devToken;
     private String id;
 	private String username;
 	private String passwordHash;
@@ -32,6 +33,14 @@ public class User {
 	
 	public String getUsername(){//getters and setters
         return username;
+    }
+	
+	public String getDevToken(){
+        return devToken;
+    }
+    
+    public void setDevToken(String devTolken){
+        this.devToken = devToken;
     }
     
     public double getLatitude(){

@@ -6,14 +6,16 @@ repositories{
     mavenCentral()
 }
 
+dependencies {
+	compile 'com.google.code.gson:gson:2.2.4',
+			'com.notnoop.apns:apns:1.0.0.Beta6',
+			'org.codehaus.jackson:jackson-core-asl:1.9.10',
+			'org.codehaus.jackson:jackson-mapper-asl:1.9.10:'
+}
+
 war {
     baseName = 'StudyGroupServer'
 	from('lib') {
         include 'Certificates.p12'
     }
-}
-
-dependencies {
-	compile 'com.google.code.gson:gson:2.2.4',
-			files('lib/apns-0.1.5-jar-with-dependencies.jar')
 }

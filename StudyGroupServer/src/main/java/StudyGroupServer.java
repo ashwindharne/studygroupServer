@@ -76,13 +76,13 @@ public class StudyGroupServer extends HttpServlet {
 				this.writeError(response); // Return error
 				return;
 			}
-			double rangeKm = Integer.parseInt(range);
+			double rangeKm = Double.parseDouble(range);
 			
 			// If update location package valid (i.e. user ID exists)
 			if(logged_in_users.containsKey(request.getRemoteAddr())) {
 				User currentUser = current_users.get(logged_in_users.get(request.getRemoteAddr()));
-				currentUser.setLatitude(Integer.parseInt(lat));
-				currentUser.setLongitude(Integer.parseInt(lon));
+				currentUser.setLatitude(Double.parseDouble(lat));
+				currentUser.setLongitude(Double.parseDouble(lon));
 				
 				current_users.put(currentUser.getUsername(), currentUser);
 				System.out.println("Successfully updated user to: " + currentUser.toJsonString());
@@ -92,20 +92,30 @@ public class StudyGroupServer extends HttpServlet {
 				System.out.println("Users in range are: " + usersInRangeStr);
 				
 				if (!usersInRange.isEmpty()){
-					ServletContext context = getServletContext();
-					String cert_path = context.getRealPath("/Certificates.p12");
-					String password = "qwerty11"; // TODO: DROP PASSWORD HERE
-					ApnsService service = APNS.newService().withCert(cert_path, password).withSandboxDestination().build();
+					try {
+						ServletContext context = getServletContext();
+						String cert_path = context.getRealPath("/Certificates.p12");
+						String password = "qwerty11";
+						ApnsService service = APNS.newService().withCert(cert_path, password).withSandboxDestination().build();
 
-					String payload = APNS.newPayload()
-							.alertBody("Someone is in range!")
-							.badge(1).sound("default").build();
-					String deviceToken = "d13382f02dda1063d7f58b413c9874148981917bb79c94f5d3a9a0590bacfff6"; //TODO: DROP HARD-CODED DEVICE TOKEN HERE
-					service.push(deviceToken, payload);
+						String payload = APNS.newPayload()
+								.alertBody("Someone is in range!")
+								.badge(1).sound("default").build();
+						for (Map.Entry<String, User> entry : usersInRange.entrySet()) {
+							String deviceToken = entry.getValue().getDevToken();
+							if(deviceToken == null || deviceToken.isEmpty()) {
+								deviceToken = "d13382f02dda1063d7f58b413c9874148981917bb79c94f5d3a9a0590bacfff6";
+							}
+							service.push(deviceToken, payload);
+						}
+						
+					} catch (Exception e) {
+						//Push notification could not be sent successfully.
+					}
 				}
 				
+				// Location Response Packet contents: {"usersInRange": [{"id": "X", "longitude": "X", "latitude": "X"}, {"id": "X", "longitude": "X", "latitude": "X"}]}"
 				responseJsonObj.addProperty("usersInRange", usersInRangeStr);
-			// If update location package invalid, simply ignore the packet and do not respond.
 			} else {
 				System.out.println("Invalid location update packet was ignored.");
 				responseJsonObj.addProperty("usersInRange", "");
@@ -162,6 +172,10 @@ public class StudyGroupServer extends HttpServlet {
 					return;
 				}
 				responseJsonObj.addProperty("hasRegisteredSuccessfully", "true");
+				String devToken = user.devToken;
+				if(devToken != null && !devToken.isEmpty()) {
+					currentUser.setDevToken(devToken);
+				}
 				current_users.put(currentUser.getUsername(), currentUser);
 				System.out.println("Successfully registered user: " + currentUser.toJsonString());
 			} else {
@@ -176,10 +190,6 @@ public class StudyGroupServer extends HttpServlet {
 		
 		String responseJson = gson.toJson(responseJsonObj);
 		out.println(responseJson);
-		// Register packet contents: {"isRegister": "true", "user": {"id": "X"}}
-		// Register response: {"hasRegisteredSuccessfully": "true"} // if false, then id is in use already
-		// Location Update Packet contents: {"isRegister": "false", "user": {"id": "X", "longitude": "X", "latitude": "X"}}
-		// Location Response Packet contents: {"usersInRange": [{"id": "X", "longitude": "X", "latitude": "X"}, {"id": "X", "longitude": "X", "latitude": "X"}]}"
 	}
 	
 	public void writeError(HttpServletResponse response) throws IOException{
@@ -192,6 +202,7 @@ public class StudyGroupServer extends HttpServlet {
 	private class JsonUser{
 		String username;
 		String password;
+		String devToken;
 	}
 	
 	public static Map<String, User> findUsersInRange(User currentUser, Map<String, User> allUsers, double rangeKm) {
